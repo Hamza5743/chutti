@@ -1,1 +1,3 @@
 chutti_env
+*.pyc
+db.sqlite3
