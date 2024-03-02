@@ -1,4 +1,6 @@
 [PYLINT]
+load-plugins = pylint_django
+django-settings-module = management.settings
 max-line-length = 88  # black compatibility, do not remove
 disable =
     arguments-differ,
