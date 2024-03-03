@@ -1,16 +1,20 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as django_login
+from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
+
+from chutti.services.util_services import logout_required, login_required
 
 from .models import Leave, LeaveHours
 
 # Create your views here.
 
 
-def login(request):
+@logout_required
+def login(request: HttpRequest):
     error_message = ""
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
@@ -22,15 +26,16 @@ def login(request):
                 django_login(request, user)
                 messages.success(request, f"Welcome, {username}!")
                 return redirect(
-                    "signup"
-                )  # Redirect to the leave request page or any other page
+                    "dashboard"
+                )
             error_message = "Invalid username or password."
         else:
             error_message = "Invalid username or password."
     return render(request, "chutti/login.html", {"error_message": error_message})
 
 
-def signup(request):
+@logout_required
+def signup(request: HttpRequest):
     error_message = ""
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -47,6 +52,13 @@ def signup(request):
         form = UserCreationForm()
     return render(request, "chutti/signup.html", {"error_message": error_message})
 
+def logout(request: HttpRequest):
+    django_logout(request)
+    return redirect("login")
+
+@login_required
+def dashboard(request: HttpRequest):
+    return render(request, "chutti/dashboard.html")
 
 def get_leaves(request):
     leaves: list[Leave] = Leave.objects.filter()
