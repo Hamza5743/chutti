@@ -1,12 +1,12 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as django_login, logout as django_logout
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
-from chutti.services.util_services import logout_required, login_required
+from chutti.services.util_services import login_required, logout_required
 
 from .models import Leave, LeaveHours
 
@@ -24,10 +24,7 @@ def login(request: HttpRequest):
             user = authenticate(username=username, password=password)
             if user is not None:
                 django_login(request, user)
-                messages.success(request, f"Welcome, {username}!")
-                return redirect(
-                    "dashboard"
-                )
+                return redirect("dashboard")
             error_message = "Invalid username or password."
         else:
             error_message = "Invalid username or password."
@@ -41,10 +38,6 @@ def signup(request: HttpRequest):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get("username")
-            messages.success(
-                request, f"Account created for {username}. You can now log in."
-            )
             return redirect("login")  # Redirect to the login page
 
         error_message = next(iter(next(iter(form.errors.values()))))
@@ -52,13 +45,18 @@ def signup(request: HttpRequest):
         form = UserCreationForm()
     return render(request, "chutti/signup.html", {"error_message": error_message})
 
+
+@require_http_methods(["GET"])
 def logout(request: HttpRequest):
     django_logout(request)
     return redirect("login")
 
+
+@require_http_methods(["GET"])
 @login_required
 def dashboard(request: HttpRequest):
     return render(request, "chutti/dashboard.html")
+
 
 def get_leaves(request):
     leaves: list[Leave] = Leave.objects.filter()
