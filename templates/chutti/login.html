@@ -31,6 +31,7 @@
                            required=""
                            id="id_password">
                 </div>
+                {% if error_message %}<p class="text-red-500">{{ error_message }}</p>{% endif %}
                 <button class="self-center m-4 mx-auto p-1.5 px-8 bg-blue-200 hover:bg-blue-300 border-2 border-blue-400 border-solid rounded-md text-lg"
                         type="submit">Login</button>
             </form>

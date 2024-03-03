@@ -11,6 +11,7 @@ from .models import Leave, LeaveHours
 
 
 def login(request):
+    error_message = ""
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -23,12 +24,10 @@ def login(request):
                 return redirect(
                     "signup"
                 )  # Redirect to the leave request page or any other page
-            messages.error(request, "Invalid username or password.")
+            error_message = "Invalid username or password."
         else:
-            messages.error(request, "Invalid username or password.")
-    else:
-        form = AuthenticationForm()
-    return render(request, "chutti/login.html", {"form": form})
+            error_message = "Invalid username or password."
+    return render(request, "chutti/login.html", {"error_message": error_message})
 
 
 def signup(request):
