@@ -31,6 +31,7 @@ def login(request):
 
 
 def signup(request):
+    error_message = ""
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -40,9 +41,11 @@ def signup(request):
                 request, f"Account created for {username}. You can now log in."
             )
             return redirect("login")  # Redirect to the login page
+
+        error_message = next(iter(next(iter(form.errors.values()))))
     else:
         form = UserCreationForm()
-    return render(request, "chutti/signup.html", {"form": form})
+    return render(request, "chutti/signup.html", {"error_message": error_message})
 
 
 def get_leaves(request):
