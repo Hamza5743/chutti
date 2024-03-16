@@ -26,3 +26,4 @@ class Leave(models.Model):
     leave_hours = models.IntegerField(
         choices=LeaveHours.choices, default=LeaveHours.FULL_LEAVE
     )
+    description = models.TextField(default='')
