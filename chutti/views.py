@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from chutti.services.util_services import login_required, logout_required
 
 from .models import Leave, LeaveHours
-
+from .forms import LeaveForm
 # Create your views here.
 
 
@@ -56,6 +56,24 @@ def logout(request: HttpRequest):
 @login_required
 def dashboard(request: HttpRequest):
     return render(request, "chutti/dashboard.html")
+
+
+@login_required
+def apply(request: HttpRequest):
+    error_message = ""
+    if request.method == "POST":
+        form = LeaveForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            # form.save()
+            return redirect("dashboard")
+
+        error_message = next(iter(next(iter(form.errors.values()))))
+    else:
+        form = LeaveForm()
+    return render(
+        request, "chutti/apply.html", {"form": form, "error_message": error_message}
+    )
 
 
 def get_leaves(request):

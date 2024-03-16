@@ -7,10 +7,13 @@ class LeaveHours(models.IntegerChoices):
     PARTIAL_LEAVE = 4
 
 
-class TotalLeaves:
+class TotalLeaves(models.IntegerChoices):
     FULL_LEAVE = 4
     PARTIAL_LEAVE = 2
 
+class LeaveType(models.TextChoices):
+    FULL_LEAVE = "Full Leave"
+    PARTIAL_LEAVE = "Partial Leave"
 
 class LeavesLeft(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
