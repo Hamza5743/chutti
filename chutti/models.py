@@ -29,6 +29,13 @@ class LeavesLeft(models.Model):
     def convert_leave_name_to_attribute(self, leave_name):
         return f"{leave_name.replace(' ', '_').lower()}s"
 
+    @classmethod
+    def get_current_object(cls, user):
+        return next(
+            iter(LeavesLeft.objects.filter(year=datetime.today().year, user=user)),
+            None,
+        )
+
     def __str__(self):
         return f"year: {self.year}, full_leaves: {self.full_leaves}, partial_leaves: {self.partial_leaves}"
 

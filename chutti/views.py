@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.db import transaction
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -9,7 +10,7 @@ from django.views.decorators.http import require_http_methods
 from chutti.services.util_services import login_required, logout_required
 
 from .forms import LeaveForm
-from .models import Leave
+from .models import Leave, LeavesLeft
 
 # Create your views here.
 
@@ -53,9 +54,32 @@ def logout(request: HttpRequest):
     return redirect("login")
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 @login_required
-def dashboard(request: HttpRequest):
+def dashboard(request: HttpRequest, pk=None):
+    if request.method == "POST":
+        with transaction.atomic():
+            leave_to_delete: Leave = Leave.objects.get(pk=pk)
+            if leave_to_delete:
+                leaves_left = LeavesLeft.get_current_object(user=request.user)
+                leave_type_left = getattr(
+                    leaves_left,
+                    leaves_left.convert_leave_name_to_attribute(
+                        leave_to_delete.leave_type
+                    ),
+                )
+
+                setattr(
+                    leaves_left,
+                    leaves_left.convert_leave_name_to_attribute(
+                        leave_to_delete.leave_type
+                    ),
+                    leave_type_left + 1,
+                )
+
+                leaves_left.save()
+                leave_to_delete.delete()
+
     leaves_applied = Leave.objects.filter(user=request.user).order_by("-date_of_leave")
     leave_counts = {}
     for leave in leaves_applied:
