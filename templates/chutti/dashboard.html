@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="flex flex-col items-center p-8 h-full w-full">
-        <h1 class="w-full m-2 text-left text-2xl font-medium">Leave Counts:</h1>
+    <div class="flex flex-col items-center px-8 py-4 h-full w-full">
+        <div class="flex w-full">
+            <h1 class="w-full m-2 text-left text-2xl font-medium">Leave Counts:</h1>
+            <a class="self-center ml-auto p-1.5 px-4 bg-sky-200 hover:bg-sky-300 border-2 border-sky-400 border-solid rounded-md text-xl text-nowrap"
+               href="{% url 'apply' %}">🌴 Apply For Leave</a>
+        </div>
         <div class="flex flex-wrap space-x-4">
             {% for leave_type, leave_count in leave_counts.items %}
                 <div class="flex flex-col bg-amber-100 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">

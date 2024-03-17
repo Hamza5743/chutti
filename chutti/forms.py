@@ -27,7 +27,8 @@ class LeaveForm(forms.Form):
     @transaction.atomic
     def save(self, user):
         leaves_left_for_year = next(
-            iter(LeavesLeft.objects.filter(year=datetime.date.today().year, user=user))
+            iter(LeavesLeft.objects.filter(year=datetime.date.today().year, user=user)),
+            None,
         )
         if not leaves_left_for_year:
             leaves_left_for_year = LeavesLeft(user=user)
