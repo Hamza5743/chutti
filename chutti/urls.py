@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import dashboard, get_leaves, login, logout, make_data, signup, apply
+from .views import apply, dashboard, login, logout, signup
 
 urlpatterns = [
     path("", login, name="root"),
@@ -9,6 +9,4 @@ urlpatterns = [
     path("logout/", logout, name="logout"),
     path("dashboard/", dashboard, name="dashboard"),
     path("apply/", apply, name="apply"),
-    path("create/", make_data, name="make_data"),
-    path("getall/", get_leaves, name="get_leaves"),
 ]

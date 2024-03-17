@@ -2,14 +2,13 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from chutti.services.util_services import login_required, logout_required
 
 from .forms import LeaveForm
-from .models import Leave, LeaveHours
 
 # Create your views here.
 
@@ -75,27 +74,3 @@ def apply(request: HttpRequest):
     return render(
         request, "chutti/apply.html", {"form": form, "error_message": error_message}
     )
-
-
-def get_leaves(request):
-    leaves: list[Leave] = Leave.objects.filter()
-    for l in leaves:
-        print(l.date_of_leave)
-        print(l.leave_hours)
-        print(l.user)
-    return HttpResponse("Success")
-
-
-def make_data(request: HttpRequest):
-    from datetime import datetime
-
-    if request.user.is_authenticated:
-        for j in range(4):
-            l = Leave(user=request.user, date_of_leave=datetime.now().date())
-            if j % 2 == 0:
-                l.leave_hours = LeaveHours.PARTIAL_LEAVE
-            l.save()
-
-        return HttpResponse("Success")
-
-    return HttpResponse("Failure")
