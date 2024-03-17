@@ -14,3 +14,4 @@ pip3 install -r requirements.txt
 
 # Add pre-commit hook
 cat ./pre-commit.sh > ./.git/hooks/pre-commit
+chmod +x ./.git/hooks/pre-commit
