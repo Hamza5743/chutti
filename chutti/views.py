@@ -65,7 +65,6 @@ def apply(request: HttpRequest):
     if request.method == "POST":
         form = LeaveForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             error_message = form.save(user=request.user)
             if not error_message:
                 return redirect("dashboard")

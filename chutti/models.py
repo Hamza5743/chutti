@@ -27,7 +27,7 @@ class LeavesLeft(models.Model):
     partial_leaves = models.IntegerField(default=TotalLeaves.PARTIAL_LEAVE)
 
     def convert_leave_name_to_attribute(self, leave_name):
-        return f"{leave_name.replace(" ", "_").lower()}s"
+        return f"{leave_name.replace(' ', '_').lower()}s"
 
     def __str__(self):
         return f"year: {self.year}, full_leaves: {self.full_leaves}, partial_leaves: {self.partial_leaves}"
