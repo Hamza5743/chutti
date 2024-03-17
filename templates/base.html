@@ -3,25 +3,32 @@
     {% load static tailwind_tags %}
     <head>
         <meta charset="UTF-8">
+        <meta name="keywords" lang="en" content="Leaves, Management" />
+        <meta name="description" lang="en" content="Leaves Management System" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
             {% block title %}Leave Management{% endblock %}
         </title>
         <!-- Add your CSS links or stylesheets here -->
+        <style>
+            body {
+                background-color: red;
+                font-family: Lato, Arial, Helvetica, sans-serif;
+            }
+        </style>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
               rel="stylesheet">
         {% tailwind_css %}
     </head>
-    <body class="bg-gray-50 w-screen h-screen"
-          style="font-family: Lato, Arial, Helvetica, sans-serif">
+    <body class="bg-gray-50 w-screen h-screen">
         <header>
             <h1>Leave Management System</h1>
             <!-- Add your navigation bar or any other common elements here -->
         </header>
-        <main class="w-screen h-screen">
+        <main class="w-full h-full">
             {% block content %}{% endblock %}
         </main>
         <footer>

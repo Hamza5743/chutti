@@ -9,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 from chutti.services.util_services import login_required, logout_required
 
 from .forms import LeaveForm
+from .models import Leave
 
 # Create your views here.
 
@@ -55,7 +56,19 @@ def logout(request: HttpRequest):
 @require_http_methods(["GET"])
 @login_required
 def dashboard(request: HttpRequest):
-    return render(request, "chutti/dashboard.html")
+    leaves_applied = Leave.objects.filter(user=request.user).order_by("-date_of_leave")
+    leave_counts = {}
+    for leave in leaves_applied:
+        if leave.leave_type not in leave_counts:
+            leave_counts[leave.leave_type] = 0
+
+        leave_counts[leave.leave_type] += 1
+
+    return render(
+        request,
+        "chutti/dashboard.html",
+        {"leaves_applied": leaves_applied, "leave_counts": leave_counts},
+    )
 
 
 @login_required
