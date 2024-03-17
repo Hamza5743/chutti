@@ -13,14 +13,10 @@ class LeaveForm(forms.Form):
     description = forms.CharField(max_length=100, required=False)
 
     def clean_date_of_leave(self):
-        data = self.cleaned_data["date_of_leave"]
+        data: datetime.date = self.cleaned_data["date_of_leave"]
 
-        today = datetime.date.today()
-
-        if data < today - datetime.timedelta(
-            weeks=4
-        ) or data > today + datetime.timedelta(weeks=4):
-            raise ValidationError("You can only select date within 4 weeks of today")
+        if not data.year == datetime.date.today().year:
+            raise ValidationError("You can only select date of this year")
 
         return data
 
