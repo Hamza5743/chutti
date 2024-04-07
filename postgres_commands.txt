@@ -1,0 +1,12 @@
+postgres=# CREATE DATABASE chutti;
+CREATE DATABASE
+postgres=# CREATE USER chutti_admin WITH PASSWORD 'myChutti@123';
+CREATE ROLE
+postgres=# ALTER ROLE chutti_admin SET client_encoding TO 'utf8';
+ALTER ROLE
+postgres=# ALTER ROLE chutti_admin SET default_transaction_isolation TO 'read committed';
+ALTER ROLE
+postgres=# ALTER ROLE chutti_admin SET timezone TO 'UTC';
+ALTER ROLE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE chutti TO chutti_admin;
+GRANT
