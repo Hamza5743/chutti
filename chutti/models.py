@@ -4,27 +4,31 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 
-class LeaveHours(models.IntegerChoices):
-    FULL_LEAVE = 8
-    PARTIAL_LEAVE = 4
-
-
 class TotalLeaves(models.IntegerChoices):
-    FULL_LEAVE = 4
-    PARTIAL_LEAVE = 2
+    ON_LEAVE = 25
+    MEDICAL_LEAVE = 10
+    CASUAL_LEAVE = 20
+    HALF_LEAVE = 15
+    SHORT_LEAVE = 30
 
 
 class LeaveType(models.TextChoices):
-    FULL_LEAVE = "Full Leave"
-    PARTIAL_LEAVE = "Partial Leave"
+    ON_LEAVE = "On Leave"
+    MEDICAL_LEAVE = "Medical Leave"
+    CASUAL_LEAVE = "Casual Leave"
+    HALF_LEAVE = "Half Leave"
+    SHORT_LEAVE = "Short Leave"
 
 
 class LeavesLeft(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     year = models.IntegerField(default=datetime.today().year)
 
-    full_leaves = models.IntegerField(default=TotalLeaves.FULL_LEAVE)
-    partial_leaves = models.IntegerField(default=TotalLeaves.PARTIAL_LEAVE)
+    on_leave = models.IntegerField(default=TotalLeaves.ON_LEAVE)
+    medical_leave = models.IntegerField(default=TotalLeaves.MEDICAL_LEAVE)
+    casual_leave = models.IntegerField(default=TotalLeaves.CASUAL_LEAVE)
+    half_leave = models.IntegerField(default=TotalLeaves.HALF_LEAVE)
+    short_leave = models.IntegerField(default=TotalLeaves.SHORT_LEAVE)
 
     def convert_leave_name_to_attribute(self, leave_name):
         return f"{leave_name.replace(' ', '_').lower()}s"
@@ -36,16 +40,11 @@ class LeavesLeft(models.Model):
             None,
         )
 
-    def __str__(self):
-        return f"year: {self.year}, full_leaves: {self.full_leaves}, partial_leaves: {self.partial_leaves}"
-
 
 class Leave(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     date_of_leave = models.DateField()
-    leave_type = models.TextField(
-        choices=LeaveType.choices, default=LeaveHours.FULL_LEAVE
-    )
+    leave_type = models.TextField(choices=LeaveType.choices, default=LeaveType.ON_LEAVE)
     description = models.TextField(default="")
 
     def __str__(self):
