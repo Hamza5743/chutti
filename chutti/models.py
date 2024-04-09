@@ -31,7 +31,7 @@ class LeavesLeft(models.Model):
     short_leave = models.IntegerField(default=TotalLeaves.SHORT_LEAVE)
 
     def convert_leave_name_to_attribute(self, leave_name):
-        return f"{leave_name.replace(' ', '_').lower()}s"
+        return f"{leave_name.replace(' ', '_').lower()}"
 
     @classmethod
     def get_current_object(cls, user):
