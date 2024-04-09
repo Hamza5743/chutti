@@ -1,25 +1,21 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.db import transaction
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
+from chutti import forms
+from chutti.models import Leave, LeavesLeft
 from chutti.services.util_services import login_required, logout_required
-
-from .forms import LeaveForm
-from .models import Leave, LeavesLeft
-
-# Create your views here.
 
 
 @logout_required
 def login(request: HttpRequest):
     error_message = ""
     if request.method == "POST":
-        form = AuthenticationForm(request, request.POST)
+        form = forms.LoginForm(request, request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
@@ -37,14 +33,14 @@ def login(request: HttpRequest):
 def signup(request: HttpRequest):
     error_message = ""
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = forms.SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("login")  # Redirect to the login page
 
         error_message = next(iter(next(iter(form.errors.values()))))
     else:
-        form = UserCreationForm()
+        form = forms.SignUpForm()
     return render(request, "chutti/signup.html", {"error_message": error_message})
 
 
@@ -99,7 +95,7 @@ def dashboard(request: HttpRequest, pk=None):
 def apply(request: HttpRequest):
     error_message = ""
     if request.method == "POST":
-        form = LeaveForm(request.POST)
+        form = forms.LeaveForm(request.POST)
         if form.is_valid():
             error_message = form.save(user=request.user)
             if not error_message:
@@ -107,7 +103,7 @@ def apply(request: HttpRequest):
         else:
             error_message = next(iter(next(iter(form.errors.values()))))
     else:
-        form = LeaveForm()
+        form = forms.LeaveForm()
     return render(
         request, "chutti/apply.html", {"form": form, "error_message": error_message}
     )

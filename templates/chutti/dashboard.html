@@ -7,6 +7,7 @@
                href="{% url 'apply' %}">🌴 Apply For Leave</a>
         </div>
         <div class="flex flex-wrap space-x-4">
+            {% if not leave_counts %}<div class="text-xl">No Leaves Applied!</div>{% endif %}
             {% for leave_type, leave_count in leave_counts.items %}
                 <div class="flex flex-col bg-amber-100 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">
                     <div class="flex flex-col w-full space-y-3 text-center text-4xl">{{ leave_count }}</div>
@@ -43,5 +44,6 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if not leaves_applied %}<div class="my-auto text-xl">No Leaves Applied!</div>{% endif %}
     </div>
 {% endblock %}

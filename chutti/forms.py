@@ -1,7 +1,9 @@
 import datetime
 
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import transaction
 
 from .models import Leave, LeavesLeft, LeaveType
@@ -54,3 +56,19 @@ class LeaveForm(forms.Form):
         leaves_left_for_year.save()
         leave_request.save()
         return ""
+
+
+class SignUpForm(UserCreationForm):
+    def clean_username(self):
+        self.clean()
+        username: str = self.cleaned_data["username"]
+        validate_email(username)
+        return username
+
+
+class LoginForm(AuthenticationForm):
+    def clean_username(self):
+        self.clean()
+        username: str = self.cleaned_data["username"]
+        validate_email(username)
+        return username
