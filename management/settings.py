@@ -30,7 +30,14 @@ SECRET_KEY = config["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config["DEBUG"] == "True"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+    "chutti.onrender.com",
+    config["DB_HOST"],
+]
+
+CSRF_TRUSTED_ORIGINS = ["https://chutti.onrender.com"]
 
 
 # Application definition
