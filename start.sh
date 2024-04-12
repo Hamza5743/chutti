@@ -3,4 +3,4 @@
 source ./chutti_env/bin/activate
 
 trap 'pkill -P $$' INT
-python3 manage.py runserver 0.0.0.0:10000 & python3 manage.py tailwind start
+LC_ALL="C" postgres -D /usr/local/var/postgresql@16 &> database.logs & python3 manage.py tailwind start > tailwind.logs & python3 manage.py runserver 0.0.0.0:10000
