@@ -35,7 +35,11 @@ class LeaveForm(forms.Form):
             ),
         )
 
-        if leave_type_left == 0:
+        if (
+            leave_type_left == 0
+            and getattr(LeaveType, self.cleaned_data["leave_type"])
+            == LeaveType.MEDICAL_LEAVE
+        ):
             return f"You don't have any {getattr(LeaveType, self.cleaned_data['leave_type']).lower()}s left for the year"
 
         setattr(
