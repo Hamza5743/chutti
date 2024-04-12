@@ -12,6 +12,12 @@ source ./chutti_env/bin/activate
 python3 manage.py tailwind install
 pip3 install -r requirements.txt
 
+# Convert static asset files
+python3 manage.py collectstatic --no-input
+
+# Apply any outstanding database migrations
+python3 manage.py migrate
+
 # Add pre-commit hook
 cat ./pre-commit.sh > ./.git/hooks/pre-commit
 chmod +x ./.git/hooks/pre-commit
