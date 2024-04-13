@@ -3,13 +3,13 @@
     <div class="flex flex-col items-center px-8 py-4 h-full w-full">
         <div class="flex w-full">
             <h1 class="w-full m-2 text-left text-2xl font-medium">Leave Counts:</h1>
-            <a class="self-center ml-auto p-1.5 px-4 bg-sky-200 hover:bg-sky-300 border-2 border-sky-400 border-solid rounded-md text-xl text-nowrap"
+            <a class="self-center ml-auto p-1.5 px-4 bg-sky-200 hover:bg-sky-300 border-2 border-sky-400 border-solid rounded-md text-xl text-center sm:text-nowrap"
                href="{% url 'apply' %}">🌴 Apply For Leave</a>
         </div>
-        <div class="flex flex-wrap space-x-4">
+        <div class="flex flex-wrap justify-center space-x-4">
             {% if not leave_counts %}<div class="text-xl">No Leaves Applied!</div>{% endif %}
             {% for leave_type, leave_count in leave_counts.items %}
-                <div class="flex flex-col bg-amber-100 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">
+                <div class="flex flex-col bg-amber-100 first:ml-4 mt-4 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">
                     <div class="flex flex-col w-full space-y-3 text-center text-4xl">{{ leave_count }}</div>
                     <div class="flex flex-col w-full space-y-3 text-center text-2xl">{{ leave_type }}s</div>
                 </div>
@@ -17,33 +17,35 @@
         </div>
         <hr class="mt-10 bg-gray-100 h-0.5 w-full">
         <h1 class="w-full m-2 mt-6 text-left text-2xl font-medium">Leaves Applied:</h1>
-        <table class="w-full border-collapse">
-            <thead>
-                <tr>
-                    <th class="p-2 bg-gray-200 border-2 border-gray-400 border-solid text-left text-lg">Date</th>
-                    <th class="p-2 bg-gray-200 border-2 border-gray-400 border-solid text-left text-lg">Leave Type</th>
-                    <th class="w-2/5 p-2 bg-gray-200 border-r-0 border-2 border-gray-400 border-solid text-left text-lg">Description</th>
-                    <th class="w-32 p-2 bg-gray-200 border-l-0 border-2 border-gray-400 border-solid text-left text-lg"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for leave in leaves_applied %}
+        <div class="w-full overflow-scroll">
+            <table class="w-full border-collapse">
+                <thead>
                     <tr>
-                        <td class="p-2 border-2 border-gray-200 border-solid">🗓️ {{ leave.date_of_leave }}</td>
-                        <td class="p-2 border-2 border-gray-200 border-solid">{{ leave.leave_type }}</td>
-                        <td class="p-2 border-r-0 border-2 border-gray-200 border-solid">📝 {{ leave.description }}</td>
-                        <td class="p-2 border-l-0 border-2 border-gray-200 border-solid">
-                            <form method="post" action="{% url 'dashboard' leave.pk %}">
-                                {% csrf_token %}
-                                <button class="self-center p-1.5 px-8 bg-red-200 hover:bg-red-300 border-2 border-red-400 border-solid rounded-md text-lg">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
+                        <th class="p-2 bg-gray-200 border-2 border-gray-400 border-solid text-left text-lg">Date</th>
+                        <th class="p-2 bg-gray-200 border-2 border-gray-400 border-solid text-left text-lg">Leave Type</th>
+                        <th class="w-2/5 p-2 bg-gray-200 border-r-0 border-2 border-gray-400 border-solid text-left text-lg">Description</th>
+                        <th class="w-32 p-2 bg-gray-200 border-l-0 border-2 border-gray-400 border-solid text-left text-lg"></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for leave in leaves_applied %}
+                        <tr>
+                            <td class="p-2 border-2 border-gray-200 border-solid">🗓️ {{ leave.date_of_leave }}</td>
+                            <td class="p-2 border-2 border-gray-200 border-solid">{{ leave.leave_type }}</td>
+                            <td class="p-2 border-r-0 border-2 border-gray-200 border-solid">📝 {{ leave.description }}</td>
+                            <td class="p-2 border-l-0 border-2 border-gray-200 border-solid">
+                                <form method="post" action="{% url 'dashboard' leave.pk %}">
+                                    {% csrf_token %}
+                                    <button class="self-center p-1.5 px-8 bg-red-200 hover:bg-red-300 border-2 border-red-400 border-solid rounded-md text-lg">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% if not leaves_applied %}<div class="my-auto text-xl">No Leaves Applied!</div>{% endif %}
     </div>
 {% endblock %}
