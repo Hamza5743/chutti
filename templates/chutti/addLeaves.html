@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="flex flex-col items-center justify-center h-full w-full bg-amber-50">
+        <div class="flex flex-col w-1/3 sm:min-w-96 min-w-72 bg-amber-200 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">
+            <h1 class="w-full m-2 text-center text-2xl font-medium">Add Existing Leaves</h1>
+            <form class="flex flex-col w-full space-y-5"
+                  method="post"
+                  action="{% url 'add_leaves' %}">
+                {% csrf_token %}
+                <div class="flex flex-col justify-start items-center w-full">
+                    {% for field in form %}
+                        <label class="mr-auto font-bold mt-3" for="{{ field.auto_id }}">{{ field.label | title }}s</label>
+                        <input class="w-full rounded"
+                               name="{{ field.html_name }}"
+                               id="{{ field.auto_id }}"
+                               type="number"
+                               placeholder="Add Existing {{ field.label }}s You Have">
+                    {% endfor %}
+                </div>
+                {% if error_message %}<p class="text-red-500">{{ error_message }}</p>{% endif %}
+                <button class="self-center m-4 mx-auto p-1.5 px-8 bg-blue-200 hover:bg-blue-300 border-2 border-blue-400 border-solid rounded-md text-lg"
+                        type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

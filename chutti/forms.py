@@ -62,6 +62,37 @@ class LeaveForm(forms.Form):
         return ""
 
 
+class AddLeavesForm(forms.Form):
+    on_leave = forms.IntegerField(required=False)
+    medical_leave = forms.IntegerField(required=False)
+    casual_leave = forms.IntegerField(required=False)
+    half_leave = forms.IntegerField(required=False)
+    short_leave = forms.IntegerField(required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        for _, value in cleaned_data.items():
+            if value is not None and value < 0:
+                raise ValidationError("Leaves count can't be negative")
+
+    @transaction.atomic
+    def save(self, user):
+        leaves_left_for_year = LeavesLeft.get_current_object(user=user)
+        if not leaves_left_for_year:
+            leaves_left_for_year = LeavesLeft(user=user)
+
+        for leave_type, value in self.cleaned_data.items():
+            if value is not None:
+                setattr(
+                    leaves_left_for_year,
+                    leave_type,
+                    value,
+                )
+
+        leaves_left_for_year.save()
+        return ""
+
+
 class SignUpForm(UserCreationForm):
     def clean_username(self):
         self.clean()

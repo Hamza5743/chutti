@@ -28,7 +28,7 @@
                             id="{{ form.leave_type.auto_id }}">
                         {% for value, name in form.leave_type.field.choices %}<option value="{{ value }}">{{ name }}</option>{% endfor %}
                     </select>
-                    <label class="mr-auto font-bold mt-3" for="id_password">
+                    <label class="mr-auto font-bold mt-3" for="{{ form.description.auto_id }}">
                         Description
                         {% if form.description.field.required == True %}<span class="align-top text-sm text-red-400">*</span>{% endif %}
                     </label>

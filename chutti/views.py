@@ -127,3 +127,21 @@ def apply(request: HttpRequest):
     return render(
         request, "chutti/apply.html", {"form": form, "error_message": error_message}
     )
+
+
+@login_required
+def add_leaves(request: HttpRequest):
+    error_message = ""
+    if request.method == "POST":
+        form = forms.AddLeavesForm(request.POST)
+        if form.is_valid():
+            error_message = form.save(user=request.user)
+            if not error_message:
+                return redirect("dashboard")
+        else:
+            error_message = next(iter(next(iter(form.errors.values()))))
+    else:
+        form = forms.AddLeavesForm()
+    return render(
+        request, "chutti/addLeaves.html", {"form": form, "error_message": error_message}
+    )
