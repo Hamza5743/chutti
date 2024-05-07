@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from chutti import forms
-from chutti.models import Leave, LeavesLeft, LeaveType
+from chutti.models import Leave, LeavesLeft, LeaveType, UserConstants
 from chutti.services.util_services import login_required, logout_required
 
 
@@ -131,6 +131,14 @@ def apply(request: HttpRequest):
 
 @login_required
 def add_leaves(request: HttpRequest):
+    user_constants = next(
+        iter(UserConstants.objects.filter(user=request.user)),
+        None,
+    )
+
+    if user_constants and user_constants.has_seen_add_leaves_page:
+        return redirect("/")
+
     error_message = ""
     if request.method == "POST":
         form = forms.AddLeavesForm(request.POST)

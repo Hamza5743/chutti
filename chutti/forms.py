@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
 
-from .models import Leave, LeavesLeft, LeaveType
+from chutti.models import Leave, LeavesLeft, LeaveType, UserConstants
 
 
 class LeaveForm(forms.Form):
@@ -89,6 +89,17 @@ class AddLeavesForm(forms.Form):
                     value,
                 )
 
+        user_constants = next(
+            iter(UserConstants.objects.filter(user=user)),
+            None,
+        )
+
+        if not user_constants:
+            user_constants = UserConstants(user=user)
+
+        user_constants.has_seen_add_leaves_page = True
+
+        user_constants.save()
         leaves_left_for_year.save()
         return ""
 

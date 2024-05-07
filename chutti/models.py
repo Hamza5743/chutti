@@ -49,3 +49,9 @@ class Leave(models.Model):
 
     def __str__(self):
         return f"date_of_leave: {self.date_of_leave}, leave_type: {self.leave_type}, description: {self.description}"
+
+
+class UserConstants(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+
+    has_seen_add_leaves_page = models.BooleanField(default=False)
