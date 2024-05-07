@@ -91,6 +91,7 @@ def dashboard(request: HttpRequest, pk=None):
             }
 
         leave_counts[leave.leave_type]["leaves_taken"] += 1
+        leave_counts[leave.leave_type]["leaves_left"] += 1
 
     for leave_type in LeaveType.choices:
         if leave_type[1] not in leave_counts:
