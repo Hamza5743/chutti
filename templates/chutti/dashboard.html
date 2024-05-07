@@ -10,7 +10,9 @@
             {% if not leave_counts %}<div class="text-xl">No Leaves Applied!</div>{% endif %}
             {% for leave_type, leave_count in leave_counts.items %}
                 <div class="flex flex-col bg-amber-100 first:ml-4 mt-4 p-8 py-2 border-2 border-amber-400 border-solid rounded-md">
-                    <div class="flex flex-col w-full space-y-3 text-center text-4xl">{{ leave_count }}</div>
+                    <div class="inline text-center text-4xl">
+                        {{ leave_count.leaves_taken }}<span class="ml-1 text-sm">of {{ leave_count.leaves_left }}</span>
+                    </div>
                     <div class="flex flex-col w-full space-y-3 text-center text-2xl">{{ leave_type }}s</div>
                 </div>
             {% endfor %}

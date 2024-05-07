@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from chutti import forms
-from chutti.models import Leave, LeavesLeft
+from chutti.models import Leave, LeavesLeft, LeaveType
 from chutti.services.util_services import login_required, logout_required
 
 
@@ -77,12 +77,31 @@ def dashboard(request: HttpRequest, pk=None):
                 leave_to_delete.delete()
 
     leaves_applied = Leave.objects.filter(user=request.user).order_by("-date_of_leave")
+    leaves_left = LeavesLeft.get_current_object(user=request.user)
     leave_counts = {}
     for leave in leaves_applied:
         if leave.leave_type not in leave_counts:
-            leave_counts[leave.leave_type] = 0
+            leave_counts[leave.leave_type] = {
+                "leaves_taken": 0,
+                "leaves_left": getattr(
+                    leaves_left,
+                    leaves_left.convert_leave_name_to_attribute(leave.leave_type),
+                    0,
+                ),
+            }
 
-        leave_counts[leave.leave_type] += 1
+        leave_counts[leave.leave_type]["leaves_taken"] += 1
+
+    for leave_type in LeaveType.choices:
+        if leave_type[1] not in leave_counts:
+            leave_counts[leave_type[1]] = {
+                "leaves_taken": 0,
+                "leaves_left": getattr(
+                    leaves_left,
+                    leaves_left.convert_leave_name_to_attribute(leave_type[1]),
+                    0,
+                ),
+            }
 
     return render(
         request,
